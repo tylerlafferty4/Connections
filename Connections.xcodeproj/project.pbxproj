@@ -8,20 +8,24 @@
 
 /* Begin PBXBuildFile section */
 		D8924A0D21F786220005C004 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8924A0C21F786210005C004 /* AppDelegate.swift */; };
-		D8924A0F21F786220005C004 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8924A0E21F786220005C004 /* ViewController.swift */; };
+		D8924A0F21F786220005C004 /* GameBoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8924A0E21F786220005C004 /* GameBoardViewController.swift */; };
 		D8924A1221F786220005C004 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8924A1021F786220005C004 /* Main.storyboard */; };
 		D8924A1421F786240005C004 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D8924A1321F786240005C004 /* Assets.xcassets */; };
 		D8924A1721F786240005C004 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8924A1521F786240005C004 /* LaunchScreen.storyboard */; };
+		D8924A2021F78ABF0005C004 /* WordTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8924A1F21F78ABF0005C004 /* WordTableViewCell.swift */; };
+		D8924A2221F8C4310005C004 /* Puzzles.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8924A2121F8C4310005C004 /* Puzzles.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		D8924A0921F786210005C004 /* Connections.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Connections.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8924A0C21F786210005C004 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		D8924A0E21F786220005C004 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		D8924A0E21F786220005C004 /* GameBoardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoardViewController.swift; sourceTree = "<group>"; };
 		D8924A1121F786220005C004 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D8924A1321F786240005C004 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D8924A1621F786240005C004 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D8924A1821F786240005C004 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D8924A1F21F78ABF0005C004 /* WordTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordTableViewCell.swift; sourceTree = "<group>"; };
+		D8924A2121F8C4310005C004 /* Puzzles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Puzzles.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,14 +58,24 @@
 		D8924A0B21F786210005C004 /* Connections */ = {
 			isa = PBXGroup;
 			children = (
+				D8924A1E21F78AA50005C004 /* GameBoard */,
 				D8924A0C21F786210005C004 /* AppDelegate.swift */,
-				D8924A0E21F786220005C004 /* ViewController.swift */,
 				D8924A1021F786220005C004 /* Main.storyboard */,
 				D8924A1321F786240005C004 /* Assets.xcassets */,
 				D8924A1521F786240005C004 /* LaunchScreen.storyboard */,
 				D8924A1821F786240005C004 /* Info.plist */,
+				D8924A2121F8C4310005C004 /* Puzzles.swift */,
 			);
 			path = Connections;
+			sourceTree = "<group>";
+		};
+		D8924A1E21F78AA50005C004 /* GameBoard */ = {
+			isa = PBXGroup;
+			children = (
+				D8924A0E21F786220005C004 /* GameBoardViewController.swift */,
+				D8924A1F21F78ABF0005C004 /* WordTableViewCell.swift */,
+			);
+			path = GameBoard;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,7 +149,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D8924A0F21F786220005C004 /* ViewController.swift in Sources */,
+				D8924A0F21F786220005C004 /* GameBoardViewController.swift in Sources */,
+				D8924A2221F8C4310005C004 /* Puzzles.swift in Sources */,
+				D8924A2021F78ABF0005C004 /* WordTableViewCell.swift in Sources */,
 				D8924A0D21F786220005C004 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
