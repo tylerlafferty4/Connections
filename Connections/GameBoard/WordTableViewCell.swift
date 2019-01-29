@@ -39,11 +39,11 @@ class WordTableViewCell: UITableViewCell {
         addBorders(label: letter11)
     }
     
-    func setupCell(index: Int, word: String, lettersToShow: Int) {
+    func setupCell(index: Int, word: String, lettersToShow: Int, count: Int) {
         let letters = Array(word)
-        if index == 0 || index == 6 {
+        if index == 0 || index == count {
             setFullWord(letters: letters)
-            setLetterColors(color: UIColor.green)
+            setLetterColors(color: CORRECT_COLOR)
         } else {
             clearLetters()
             setLetters(count: lettersToShow, letters: letters)
@@ -85,9 +85,9 @@ class WordTableViewCell: UITableViewCell {
             letter11.text = checkIfEmpty(letters: letters, index: 10).uppercased()
         }
         if letters.count == count {
-            setLetterColors(color: UIColor.green)
+            setLetterColors(color: CORRECT_COLOR)
         } else {
-            setLetterColors(color: UIColor.clear)
+            setLetterColors(color: EMPTY_COLOR)
         }
     }
     

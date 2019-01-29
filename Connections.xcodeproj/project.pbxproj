@@ -14,6 +14,8 @@
 		D8924A1721F786240005C004 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8924A1521F786240005C004 /* LaunchScreen.storyboard */; };
 		D8924A2021F78ABF0005C004 /* WordTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8924A1F21F78ABF0005C004 /* WordTableViewCell.swift */; };
 		D8924A2221F8C4310005C004 /* Puzzles.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8924A2121F8C4310005C004 /* Puzzles.swift */; };
+		D8924A2421FFB4340005C004 /* ConnectionsShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8924A2321FFB4340005C004 /* ConnectionsShared.swift */; };
+		D8924A2721FFE7F90005C004 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8924A2621FFE7F90005C004 /* HomeViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,8 @@
 		D8924A1821F786240005C004 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D8924A1F21F78ABF0005C004 /* WordTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordTableViewCell.swift; sourceTree = "<group>"; };
 		D8924A2121F8C4310005C004 /* Puzzles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Puzzles.swift; sourceTree = "<group>"; };
+		D8924A2321FFB4340005C004 /* ConnectionsShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsShared.swift; sourceTree = "<group>"; };
+		D8924A2621FFE7F90005C004 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +62,7 @@
 		D8924A0B21F786210005C004 /* Connections */ = {
 			isa = PBXGroup;
 			children = (
+				D8924A2521FFE7E30005C004 /* Home */,
 				D8924A1E21F78AA50005C004 /* GameBoard */,
 				D8924A0C21F786210005C004 /* AppDelegate.swift */,
 				D8924A1021F786220005C004 /* Main.storyboard */,
@@ -65,6 +70,7 @@
 				D8924A1521F786240005C004 /* LaunchScreen.storyboard */,
 				D8924A1821F786240005C004 /* Info.plist */,
 				D8924A2121F8C4310005C004 /* Puzzles.swift */,
+				D8924A2321FFB4340005C004 /* ConnectionsShared.swift */,
 			);
 			path = Connections;
 			sourceTree = "<group>";
@@ -76,6 +82,14 @@
 				D8924A1F21F78ABF0005C004 /* WordTableViewCell.swift */,
 			);
 			path = GameBoard;
+			sourceTree = "<group>";
+		};
+		D8924A2521FFE7E30005C004 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				D8924A2621FFE7F90005C004 /* HomeViewController.swift */,
+			);
+			path = Home;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -151,8 +165,10 @@
 			files = (
 				D8924A0F21F786220005C004 /* GameBoardViewController.swift in Sources */,
 				D8924A2221F8C4310005C004 /* Puzzles.swift in Sources */,
+				D8924A2421FFB4340005C004 /* ConnectionsShared.swift in Sources */,
 				D8924A2021F78ABF0005C004 /* WordTableViewCell.swift in Sources */,
 				D8924A0D21F786220005C004 /* AppDelegate.swift in Sources */,
+				D8924A2721FFE7F90005C004 /* HomeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
