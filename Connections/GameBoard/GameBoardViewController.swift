@@ -30,6 +30,8 @@ class GameBoardViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+//        guessField.isUserInteractionEnabled = false
+        
         // Easy Puzzle Test
         if difficulty == .easy {
             currentConnection = EASY_PUZZLES[0]
@@ -61,6 +63,8 @@ class GameBoardViewController: UIViewController {
                 timeToSubmit = false
                 guessField.text = ""
                 checkGuess(guess: stripped, rowToCheck: selectedRow)
+                guessField.resignFirstResponder()
+//                guessField.isUserInteractionEnabled = false
             }
         }
     }
@@ -171,8 +175,25 @@ extension GameBoardViewController: UITableViewDelegate, UITableViewDataSource {
                 break
             }
             timeToSubmit = true
+//            guessField.isUserInteractionEnabled = true
             gameBoard.reloadRows(at: [indexPath], with: .fade)
         }
+    }
+}
+
+// MARK: - Text Field Delegate
+extension GameBoardViewController : UITextFieldDelegate {
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        if selectedRow == nil {
+            showAlert(message: SELECT_A_LETTER)
+            return false
+        }
+        if timeToSubmit == false {
+            showAlert(message: SELECT_A_LETTER)
+            return false
+        }
+        return true
     }
 }
 
@@ -180,42 +201,46 @@ extension GameBoardViewController: UITableViewDelegate, UITableViewDataSource {
 extension GameBoardViewController {
     
     func checkGuess(guess : String, rowToCheck : Int) {
-        print("Checking guess")
+        
+        var correct = false
         switch rowToCheck {
         case 1:
             if guess == currentConnection.word2 {
                 correctWords.append(rowToCheck)
                 row2LettersShown = currentConnection.word2.count
-                gameBoard.reloadRows(at: [IndexPath(row: rowToCheck, section: 0)], with: .fade)
-            } else {
-                showIncorrectAnswer(row: rowToCheck)
+                correct = true
             }
         case 2:
             if guess == currentConnection.word3 {
                 correctWords.append(rowToCheck)
                 row3LettersShown = currentConnection.word3.count
-                gameBoard.reloadRows(at: [IndexPath(row: rowToCheck, section: 0)], with: .fade)
+                correct = true
             }
         case 3:
             if guess == currentConnection.word4 {
                 correctWords.append(rowToCheck)
                 row4LettersShown = currentConnection.word4.count
-                gameBoard.reloadRows(at: [IndexPath(row: rowToCheck, section: 0)], with: .fade)
+                correct = true
             }
         case 4:
             if guess == currentConnection.word5 {
                 correctWords.append(rowToCheck)
                 row5LettersShown = currentConnection.word5!.count
-                gameBoard.reloadRows(at: [IndexPath(row: rowToCheck, section: 0)], with: .fade)
+                correct = true
             }
         case 5:
             if guess == currentConnection.word6 {
                 correctWords.append(rowToCheck)
                 row6LettersShown = currentConnection.word6!.count
-                gameBoard.reloadRows(at: [IndexPath(row: rowToCheck, section: 0)], with: .fade)
+                correct = true
             }
         default:
             break
+        }
+        if correct {
+            gameBoard.reloadRows(at: [IndexPath(row: rowToCheck, section: 0)], with: .fade)
+        } else {
+            showIncorrectAnswer(row: rowToCheck)
         }
         if checkAllSolved() {
             showAlert(message: CONGRATULATIONS)
