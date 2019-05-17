@@ -14,6 +14,8 @@ class GameBoardViewController: UIViewController {
     @IBOutlet weak var gameBoard: UITableView!
     @IBOutlet weak var guessField: UITextField!
     @IBOutlet weak var submitBtn: UIButton!
+    @IBOutlet weak var timerLbl: UILabel!
+    @IBOutlet weak var backArrow: UIImageView!
     
     // -- Vars --
     var currentConnection: Puzzle!
@@ -26,47 +28,43 @@ class GameBoardViewController: UIViewController {
     var selectedRow: Int!
     var timeToSubmit = false
     var difficulty: Difficulty!
+    var timer = Timer()
+    var seconds: Int! = 60
+    var easyPuzzles: [Puzzle]! = []
+    var mediumPuzzles: [Puzzle]! = []
+    var normalPuzzles: [Puzzle]! = []
+    var hardPuzzles: [Puzzle]! = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        guessField.isUserInteractionEnabled = false
-        
-        // Easy Puzzle Test
-        if difficulty == .easy {
-            currentConnection = EASY_PUZZLES[0]
-        } else if difficulty == .normal {
-            currentConnection = NORMAL_PUZZLES[0]
-        } else if difficulty == .medium {
-            currentConnection = MEDIUM_PUZZLES[0]
-        } else if difficulty == .hard {
-            currentConnection = HARD_PUZZLES[2]
-        }
-        
+        updatePuzzles()
+        determinePuzzleDifficulty()
         correctWords.append(Int(getRowCount()-1))
-        
-        // Do any additional setup after loading the view, typically from a nib.
+        let tap = UITapGestureRecognizer(target: self, action: #selector(GameBoardViewController.dismissController))
+        backArrow.addGestureRecognizer(tap)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        setPuzzleTime()
+        startTimer()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        timer.invalidate()
     }
     
     @IBAction func submitGuess(_ sender: Any) {
-        if selectedRow == nil {
-            showAlert(message: SELECT_A_LETTER)
-            return
-        }
-        if timeToSubmit == false {
-            showAlert(message: SELECT_A_LETTER)
-            return
-        }
-        if let guess = guessField.text {
-            let stripped = guess.replacingOccurrences(of: " ", with: "")
-            if stripped != "" {
-                timeToSubmit = false
-                guessField.text = ""
-                checkGuess(guess: stripped, rowToCheck: selectedRow)
-                guessField.resignFirstResponder()
-//                guessField.isUserInteractionEnabled = false
-            }
-        }
+        submitGuess()
+    }
+    
+    @objc func dismissController() {
+        let transition: CATransition = CATransition()
+        transition.duration = 0.5
+        transition.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+        transition.type = CATransitionType.reveal
+        transition.subtype = CATransitionSubtype.fromLeft
+        self.view.window!.layer.add(transition, forKey: nil)
+        self.dismiss(animated: false, completion: nil)
     }
 }
 
@@ -74,7 +72,7 @@ class GameBoardViewController: UIViewController {
 extension GameBoardViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 7
+        return Int(getRowCount())
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -87,14 +85,17 @@ extension GameBoardViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func getRowCount() -> CGFloat {
-        if currentConnection.word5 == "" {
-            return 4
-        } else if currentConnection.word6 == "" {
-            return 5
-        } else if currentConnection.word7 == "" {
-            return 6
+        if currentConnection != nil {
+            if difficulty == Difficulty.easy {
+                return 4
+            } else if difficulty == Difficulty.medium {
+                return 5
+            } else if difficulty == Difficulty.hard {
+                return 6
+            }
+            return 0
         }
-        return 7
+        return 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -124,17 +125,17 @@ extension GameBoardViewController: UITableViewDelegate, UITableViewDataSource {
         default:
             break
         }
-        cell.setupCell(index: indexPath.row, word: word, lettersToShow: numLettersToShow, count: Int(getRowCount()-1))
+        cell.setupCell(index: indexPath.row, word: word, lettersToShow: numLettersToShow, count: Int(getRowCount()-1), solved: correctWords.contains(indexPath.row))
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if timeToSubmit {
-            showAlert(message: SUBMIT_GUESS)
+            showAlert(message: SUBMIT_GUESS, color: INCORRECT_COLOR)
             return
         }
         if indexPath.row == 0 || indexPath.row == Int(getRowCount()-1) || correctWords.contains(indexPath.row) {
-            showAlert(message: ALREADY_SOLVED)
+            showAlert(message: ALREADY_SOLVED, color: INCORRECT_COLOR)
             return
         }
         
@@ -142,40 +143,45 @@ extension GameBoardViewController: UITableViewDelegate, UITableViewDataSource {
         selectedRow = indexPath.row
         
         if !correctWords.contains(indexPath.row+1) && !correctWords.contains(indexPath.row-1) {
-            showAlert(message: ALREADY_SOLVED)
+            showAlert(message: ALREADY_SOLVED, color: INCORRECT_COLOR)
             return
         } else {
             switch indexPath.row {
             case 1:
-                row2LettersShown += 1
                 if row2LettersShown == currentConnection.word2.count {
-                    correctWords.append(indexPath.row)
+                    showAlert(message: NO_MORE_LETTERS, color: INCORRECT_COLOR)
+                } else {
+                    row2LettersShown += 1
                 }
             case 2:
-                row3LettersShown += 1
                 if row3LettersShown == currentConnection.word3.count {
-                    correctWords.append(indexPath.row)
+                    showAlert(message: NO_MORE_LETTERS, color: INCORRECT_COLOR)
+                } else {
+                    row3LettersShown += 1
                 }
             case 3:
-                row4LettersShown += 1
                 if row4LettersShown == currentConnection.word4.count {
-                    correctWords.append(indexPath.row)
+                    showAlert(message: NO_MORE_LETTERS, color: INCORRECT_COLOR)
+                } else {
+                    row4LettersShown += 1
                 }
             case 4:
-                row5LettersShown += 1
                 if row5LettersShown == currentConnection.word5!.count {
-                    correctWords.append(indexPath.row)
+                    showAlert(message: NO_MORE_LETTERS, color: INCORRECT_COLOR)
+                } else {
+                    row5LettersShown += 1
                 }
             case 5:
-                row6LettersShown += 1
                 if row6LettersShown == currentConnection.word6!.count {
-                    correctWords.append(indexPath.row)
+                    showAlert(message: NO_MORE_LETTERS, color: INCORRECT_COLOR)
+                } else {
+                    row6LettersShown += 1
                 }
             default:
                 break
             }
             timeToSubmit = true
-//            guessField.isUserInteractionEnabled = true
+            guessField.becomeFirstResponder()
             gameBoard.reloadRows(at: [indexPath], with: .fade)
         }
     }
@@ -186,22 +192,175 @@ extension GameBoardViewController : UITextFieldDelegate {
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         if selectedRow == nil {
-            showAlert(message: SELECT_A_LETTER)
+            showAlert(message: SELECT_A_LETTER, color: INCORRECT_COLOR)
             return false
         }
         if timeToSubmit == false {
-            showAlert(message: SELECT_A_LETTER)
+            showAlert(message: SELECT_A_LETTER, color: INCORRECT_COLOR)
             return false
         }
         return true
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        submitGuess()
+        return true
+    }
+}
+
+// MARK: - Timer Logic
+extension GameBoardViewController {
+    
+    @objc func updateTimer() {
+        seconds -= 1
+        timerLbl.text = "\(seconds!)"
+        if seconds == 0 {
+            timer.invalidate()
+            timer.invalidate()
+            showAlert(message: GAME_OVER, color: INCORRECT_COLOR)
+        }
+    }
+    
+    func startTimer() {
+        timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(GameBoardViewController.updateTimer), userInfo: nil, repeats: true)
+    }
+    
+    func setPuzzleTime() {
+        if difficulty == .easy {
+            seconds = EASY_SECONDS
+        } else if difficulty == .medium {
+            seconds = MEDIUM_SECONDS
+        } else if difficulty == .hard {
+            seconds = HARD_SECONDS
+        }
+        timerLbl.text = "\(seconds!)"
+    }
+}
+
+// MARK: - Puzzle Logic
+extension GameBoardViewController {
+    
+    func createEasyPuzzle() {
+        if determineAllPuzzlesSolved(puzzles: easyPuzzles) {
+            var foundPuzzle = false
+            while !foundPuzzle {
+                let puzzle = easyPuzzles[getRandom(count: easyPuzzles.count)]
+                if !puzzle.solved {
+                    currentConnection = puzzle
+                    foundPuzzle = true
+                }
+            }
+        } else {
+            ConnectionsShared.resetPuzzles(puzzles: easyPuzzles, key: EASY_KEY)
+            updatePuzzles()
+            loadNextPuzzle()
+        }
+    }
+    
+    func createMediumPuzzle() {
+        if determineAllPuzzlesSolved(puzzles: mediumPuzzles) {
+            let puzzle = mediumPuzzles[getRandom(count: mediumPuzzles.count)]
+            if puzzle.solved {
+                createMediumPuzzle()
+            } else {
+                currentConnection = puzzle
+            }
+        } else {
+            ConnectionsShared.resetPuzzles(puzzles: mediumPuzzles, key: MEDIUM_KEY)
+            updatePuzzles()
+        }
+    }
+    
+    func createHardPuzzle() {
+        if determineAllPuzzlesSolved(puzzles: hardPuzzles) {
+            let puzzle = hardPuzzles[getRandom(count: hardPuzzles.count)]
+            if puzzle.solved {
+                createHardPuzzle()
+            } else {
+                currentConnection = puzzle
+            }
+        } else {
+            ConnectionsShared.resetPuzzles(puzzles: hardPuzzles, key: HARD_KEY)
+            updatePuzzles()
+        }
+    }
+    
+    func determineAllPuzzlesSolved(puzzles : [Puzzle]) -> Bool {
+        var unsolved = false
+        for puzzle in puzzles {
+            if !puzzle.solved {
+                unsolved = true
+                break
+            }
+        }
+        return unsolved
+    }
+    
+    func getRandom(count : Int) -> Int {
+        if count-1 == 0 {
+            return 0
+        }
+        return Int.random(in: 0 ..< count)
+    }
+    
+    func determinePuzzleDifficulty() {
+        if difficulty == Difficulty.easy {
+            createEasyPuzzle()
+        } else if difficulty == Difficulty.medium {
+            createMediumPuzzle()
+        } else if difficulty == Difficulty.hard {
+            createHardPuzzle()
+        }
+    }
+    
+    func updatePuzzles() {
+        if difficulty == Difficulty.easy {
+            easyPuzzles = ConnectionsShared.retrievePuzzles(key: EASY_KEY)
+        } else if difficulty == Difficulty.medium {
+            mediumPuzzles = ConnectionsShared.retrievePuzzles(key: MEDIUM_KEY)
+        } else if difficulty == Difficulty.hard {
+            hardPuzzles = ConnectionsShared.retrievePuzzles(key: HARD_KEY)
+        }
+    }
+    
+    func loadNextPuzzle() {
+        row2LettersShown = 0
+        row3LettersShown = 0
+        row4LettersShown = 0
+        row5LettersShown = 0
+        row6LettersShown = 0
+        setPuzzleTime()
+        determinePuzzleDifficulty()
+        correctWords = [0, Int(getRowCount()-1)]
+        gameBoard.reloadData()
+        startTimer()
     }
 }
 
 // MARK: - Helpers
 extension GameBoardViewController {
     
+    func submitGuess() {
+        if selectedRow == nil {
+            showAlert(message: SELECT_A_LETTER, color: INCORRECT_COLOR)
+            return
+        }
+        if timeToSubmit == false {
+            showAlert(message: SELECT_A_LETTER, color: INCORRECT_COLOR)
+            return
+        }
+        if let guess = guessField.text {
+            let stripped = guess.replacingOccurrences(of: " ", with: "")
+            if stripped != "" {
+                timeToSubmit = false
+                guessField.text = ""
+                checkGuess(guess: stripped, rowToCheck: selectedRow)
+                guessField.resignFirstResponder()
+            }
+        }
+    }
+    
     func checkGuess(guess : String, rowToCheck : Int) {
-        
         var correct = false
         switch rowToCheck {
         case 1:
@@ -243,7 +402,14 @@ extension GameBoardViewController {
             showIncorrectAnswer(row: rowToCheck)
         }
         if checkAllSolved() {
-            showAlert(message: CONGRATULATIONS)
+            timer.invalidate()
+            currentConnection.solved = true
+            guessField.resignFirstResponder()
+            let customAlert = CustomAlertView()
+            let confirm = CustomAlertAction(title: "Next Puzzle") {
+                self.loadNextPuzzle()
+            }
+            customAlert.showAlertView(superview: self.view, title: "Connections", text: CONGRATULATIONS, confirmAction: confirm)
         }
     }
     
@@ -277,23 +443,69 @@ extension GameBoardViewController {
             UIView.animate(withDuration: 0.3, animations: {
                 self.gameBoard.cellForRow(at: IndexPath(row: row, section: 0))?.backgroundColor = EMPTY_COLOR
             })
-//            , completion: { (complete) in
-//                UIView.animate(withDuration: 0.3, animations: {
-//                    self.gameBoard.cellForRow(at: IndexPath(row: row, section: 0))?.backgroundColor = INCORRECT_COLOR
-//                }, completion: { (complete) in
-//                    UIView.animate(withDuration: 0.3, animations: {
-//                        self.gameBoard.cellForRow(at: IndexPath(row: row, section: 0))?.backgroundColor = EMPTY_COLOR
-//                    })
-//                })
-//            })
         }
     }
     
-    func showAlert(message: String) {
-        let alert = UIAlertController(title: "Connections", message: message, preferredStyle: .alert)
-        let confirm = UIAlertAction(title: "OK", style: .default, handler: nil)
-        alert.addAction(confirm)
-        self.present(alert, animated: true, completion: nil)
+    func showAlert(message: String, color: UIColor) {
+//        let alert = UIAlertController(title: "Connections", message: message, preferredStyle: .alert)
+//        let confirm = UIAlertAction(title: "OK", style: .default, handler: nil)
+//        alert.addAction(confirm)
+//        self.present(alert, animated: true, completion: nil)
+        let banner = Banner(title: "Connections", subtitle: message, backgroundColor: color)
+        banner.dismissesOnTap = true
+        banner.show(duration: 3)
     }
 }
+
+
+
+
+
+//        let word1 = PUZZLES[getRandom(count: PUZZLES.count)]
+//        let word2 = getSubWord(word: word1.word, allowFinal: false) //word1.subWords[getRandom(count: word1.subWords.count)].word!
+//        let word3 = getSubWord(word: word2, allowFinal: false)
+//        let word4 = getSubWord(word: word3, allowFinal: false)
+//        let word5 = getSubWord(word: word4, allowFinal: false)
+//        let word6 = getSubWord(word: word5, allowFinal: false)
+//        let word7 = getSubWord(word: word6, allowFinal: true)
+//        currentConnection = Puzzle(word1: word1.word, word2: word2, word3: word3, word4: word4, word5: word5, word6: word6, word7: word7)
+//    func getSubWord(word: String, allowFinal: Bool) -> String {
+//        for wordKey in PUZZLES {
+//            // Find the key for the word above
+//            if word == wordKey.word {
+//                // Determine the sub word
+//                var solved = false
+//                var sub: SubWord!
+//                while solved == false {
+//                    sub = wordKey.subWords[getRandom(count: wordKey.subWords.count)]
+//                    if sub.solved == false {
+//                        if allowFinal == false {
+//                            if determineFinal(word: sub.word) {
+//                                solved = true
+//                            }
+//                        } else {
+//                            solved = true
+//                        }
+//                    }
+//                }
+//                if sub != nil {
+//                    return sub.word
+//                }
+//            }
+//        }
+//        return ""
+//    }
+//
+//    func determineFinal(word: String) -> Bool {
+//        for wordKey in PUZZLES {
+//            if word == wordKey.word {
+//                if wordKey.subWords.count > 0 {
+//                    return true
+//                } else {
+//                    return false
+//                }
+//            }
+//        }
+//        return false
+//    }
 

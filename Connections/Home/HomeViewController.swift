@@ -22,6 +22,7 @@ class HomeViewController : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        ConnectionsShared.storeInitialPuzzles()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -43,11 +44,6 @@ class HomeViewController : UIViewController {
         performSegue(withIdentifier: "showGameboard", sender: self)
     }
     
-    @IBAction func normalTapped(_ sender: Any) {
-        selectedDifficulty = .normal
-        performSegue(withIdentifier: "showGameboard", sender: self)
-    }
-    
     @IBAction func mediumTapped(_ sender: Any) {
         selectedDifficulty = .medium
         performSegue(withIdentifier: "showGameboard", sender: self)
@@ -56,5 +52,10 @@ class HomeViewController : UIViewController {
     @IBAction func hardTapped(_ sender: Any) {
         selectedDifficulty = .hard
         performSegue(withIdentifier: "showGameboard", sender: self)
+    }
+    
+    @IBAction func resetPuzzles(_ sender: Any) {
+        ConnectionsShared.resetGame()
+        ConnectionsShared.storeInitialPuzzles()
     }
 }

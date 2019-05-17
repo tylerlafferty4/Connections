@@ -34,23 +34,23 @@ class WordTableViewCell: UITableViewCell {
         addBorders(label: letter6)
         addBorders(label: letter7)
         addBorders(label: letter8)
-        addBorders(label: letter9)
-        addBorders(label: letter10)
-        addBorders(label: letter11)
+//        addBorders(label: letter9)
+//        addBorders(label: letter10)
+//        addBorders(label: letter11)
     }
     
-    func setupCell(index: Int, word: String, lettersToShow: Int, count: Int) {
+    func setupCell(index: Int, word: String, lettersToShow: Int, count: Int, solved: Bool) {
         let letters = Array(word)
         if index == 0 || index == count {
             setFullWord(letters: letters)
-            setLetterColors(color: CORRECT_COLOR)
+            setLetterColors(color: CORRECT_COLOR, textColor: SOLVED_TEXT)
         } else {
             clearLetters()
-            setLetters(count: lettersToShow, letters: letters)
+            setLetters(count: lettersToShow, letters: letters, solved: solved)
         }
     }
     
-    func setLetters(count : Int, letters : [Character]) {
+    func setLetters(count : Int, letters : [Character], solved: Bool) {
         if count >= 1 {
             letter1.text = checkIfEmpty(letters: letters, index: 0).uppercased()
         }
@@ -84,25 +84,33 @@ class WordTableViewCell: UITableViewCell {
         if count >= 11 {
             letter11.text = checkIfEmpty(letters: letters, index: 10).uppercased()
         }
-        if letters.count == count {
-            setLetterColors(color: CORRECT_COLOR)
+        if solved {
+            setLetterColors(color: CORRECT_COLOR, textColor: SOLVED_TEXT)
         } else {
-            setLetterColors(color: EMPTY_COLOR)
+            setLetterColors(color: EMPTY_COLOR, textColor: UNSOLVED_TEXT)
         }
     }
     
-    func setLetterColors(color : UIColor) {
+    func setLetterColors(color : UIColor, textColor: UIColor) {
         letter1.backgroundColor = color
+        letter1.textColor = textColor
         letter2.backgroundColor = color
+        letter2.textColor = textColor
         letter3.backgroundColor = color
+        letter3.textColor = textColor
         letter4.backgroundColor = color
+        letter4.textColor = textColor
         letter5.backgroundColor = color
+        letter5.textColor = textColor
         letter6.backgroundColor = color
+        letter6.textColor = textColor
         letter7.backgroundColor = color
+        letter7.textColor = textColor
         letter8.backgroundColor = color
-        letter9.backgroundColor = color
-        letter10.backgroundColor = color
-        letter11.backgroundColor = color
+        letter8.textColor = textColor
+//        letter9.backgroundColor = color
+//        letter10.backgroundColor = color
+//        letter11.backgroundColor = color
     }
     
     func setFullWord(letters : [Character]) {
@@ -114,9 +122,9 @@ class WordTableViewCell: UITableViewCell {
         letter6.text = checkIfEmpty(letters: letters, index: 5).uppercased()
         letter7.text = checkIfEmpty(letters: letters, index: 6).uppercased()
         letter8.text = checkIfEmpty(letters: letters, index: 7).uppercased()
-        letter9.text = checkIfEmpty(letters: letters, index: 8).uppercased()
-        letter10.text = checkIfEmpty(letters: letters, index: 9).uppercased()
-        letter11.text = checkIfEmpty(letters: letters, index: 10).uppercased()
+//        letter9.text = checkIfEmpty(letters: letters, index: 8).uppercased()
+//        letter10.text = checkIfEmpty(letters: letters, index: 9).uppercased()
+//        letter11.text = checkIfEmpty(letters: letters, index: 10).uppercased()
     }
     
     func checkIfEmpty(letters : [Character], index: Int) -> String {
@@ -136,9 +144,9 @@ class WordTableViewCell: UITableViewCell {
         letter6.text = ""
         letter7.text = ""
         letter8.text = ""
-        letter9.text = ""
-        letter10.text = ""
-        letter11.text = ""
+//        letter9.text = ""
+//        letter10.text = ""
+//        letter11.text = ""
     }
     
     func addBorders(label: UILabel) {

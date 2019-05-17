@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D824F5A62208A5A900DE15FB /* CustomAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D824F5A52208A5A900DE15FB /* CustomAlertView.swift */; };
 		D8924A0D21F786220005C004 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8924A0C21F786210005C004 /* AppDelegate.swift */; };
 		D8924A0F21F786220005C004 /* GameBoardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8924A0E21F786220005C004 /* GameBoardViewController.swift */; };
 		D8924A1221F786220005C004 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D8924A1021F786220005C004 /* Main.storyboard */; };
@@ -16,9 +17,11 @@
 		D8924A2221F8C4310005C004 /* Puzzles.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8924A2121F8C4310005C004 /* Puzzles.swift */; };
 		D8924A2421FFB4340005C004 /* ConnectionsShared.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8924A2321FFB4340005C004 /* ConnectionsShared.swift */; };
 		D8924A2721FFE7F90005C004 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8924A2621FFE7F90005C004 /* HomeViewController.swift */; };
+		D8924A292204F8DB0005C004 /* Banner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8924A282204F8DB0005C004 /* Banner.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		D824F5A52208A5A900DE15FB /* CustomAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAlertView.swift; sourceTree = "<group>"; };
 		D8924A0921F786210005C004 /* Connections.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Connections.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D8924A0C21F786210005C004 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D8924A0E21F786220005C004 /* GameBoardViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameBoardViewController.swift; sourceTree = "<group>"; };
@@ -30,6 +33,7 @@
 		D8924A2121F8C4310005C004 /* Puzzles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Puzzles.swift; sourceTree = "<group>"; };
 		D8924A2321FFB4340005C004 /* ConnectionsShared.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionsShared.swift; sourceTree = "<group>"; };
 		D8924A2621FFE7F90005C004 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		D8924A282204F8DB0005C004 /* Banner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Banner.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +75,8 @@
 				D8924A1821F786240005C004 /* Info.plist */,
 				D8924A2121F8C4310005C004 /* Puzzles.swift */,
 				D8924A2321FFB4340005C004 /* ConnectionsShared.swift */,
+				D8924A282204F8DB0005C004 /* Banner.swift */,
+				D824F5A52208A5A900DE15FB /* CustomAlertView.swift */,
 			);
 			path = Connections;
 			sourceTree = "<group>";
@@ -167,7 +173,9 @@
 				D8924A2221F8C4310005C004 /* Puzzles.swift in Sources */,
 				D8924A2421FFB4340005C004 /* ConnectionsShared.swift in Sources */,
 				D8924A2021F78ABF0005C004 /* WordTableViewCell.swift in Sources */,
+				D8924A292204F8DB0005C004 /* Banner.swift in Sources */,
 				D8924A0D21F786220005C004 /* AppDelegate.swift in Sources */,
+				D824F5A62208A5A900DE15FB /* CustomAlertView.swift in Sources */,
 				D8924A2721FFE7F90005C004 /* HomeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -324,7 +332,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.lafferty.Connections;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -342,7 +350,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.lafferty.Connections;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
