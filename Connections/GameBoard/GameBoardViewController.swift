@@ -15,6 +15,7 @@ class GameBoardViewController: UIViewController {
     @IBOutlet weak var guessField: UITextField!
     @IBOutlet weak var submitBtn: UIButton!
     @IBOutlet weak var timerLbl: UILabel!
+    @IBOutlet weak var scoreLbl: UILabel!
     @IBOutlet weak var backArrow: UIImageView!
     
     // -- Vars --
@@ -30,6 +31,8 @@ class GameBoardViewController: UIViewController {
     var difficulty: Difficulty!
     var timer = Timer()
     var seconds: Int! = 60
+    var score: Int! = 0
+    var currentPuzzles: [Puzzle]! = []
     var easyPuzzles: [Puzzle]! = []
     var mediumPuzzles: [Puzzle]! = []
     var normalPuzzles: [Puzzle]! = []
@@ -37,14 +40,17 @@ class GameBoardViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        updatePuzzles()
-        determinePuzzleDifficulty()
-        correctWords.append(Int(getRowCount()-1))
+
         let tap = UITapGestureRecognizer(target: self, action: #selector(GameBoardViewController.dismissController))
         backArrow.addGestureRecognizer(tap)
+        
+        scoreLbl.text = "\(score!)"
     }
     
     override func viewDidAppear(_ animated: Bool) {
+        updatePuzzles()
+        createPuzzle()
+        correctWords.append(Int(getRowCount()-1))
         setPuzzleTime()
         startTimer()
     }
@@ -65,6 +71,13 @@ class GameBoardViewController: UIViewController {
         transition.subtype = CATransitionSubtype.fromLeft
         self.view.window!.layer.add(transition, forKey: nil)
         self.dismiss(animated: false, completion: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "gameOver" {
+            let vc = segue.destination as! GameOverViewController
+            vc.score = score
+        }
     }
 }
 
@@ -217,7 +230,16 @@ extension GameBoardViewController {
         if seconds == 0 {
             timer.invalidate()
             timer.invalidate()
-            showAlert(message: GAME_OVER, color: INCORRECT_COLOR)
+////            showAlert(message: GAME_OVER, color: INCORRECT_COLOR)
+//            let customAlert = CustomAlertView()
+//            let mainMenu = CustomAlertAction(title: "Main Menu") {
+//
+//            }
+//            let playAgain = CustomAlertAction(title: "Play Again") {
+//
+//            }
+//            customAlert.showAlertView(superview: self.view, title: "Connections", text: GAME_OVER, confirmAction: mainMenu, cancelAction: playAgain)
+            self.performSegue(withIdentifier: "gameOver", sender: self)
         }
     }
     
@@ -240,18 +262,29 @@ extension GameBoardViewController {
 // MARK: - Puzzle Logic
 extension GameBoardViewController {
     
-    func createEasyPuzzle() {
-        if determineAllPuzzlesSolved(puzzles: easyPuzzles) {
+    func createPuzzle() {
+        if determineAllPuzzlesSolved(puzzles: currentPuzzles) {
             var foundPuzzle = false
             while !foundPuzzle {
-                let puzzle = easyPuzzles[getRandom(count: easyPuzzles.count)]
+                let puzzle = currentPuzzles[getRandom(count: currentPuzzles.count)]
                 if !puzzle.solved {
                     currentConnection = puzzle
+                    gameBoard.reloadData()
                     foundPuzzle = true
                 }
             }
         } else {
-            ConnectionsShared.resetPuzzles(puzzles: easyPuzzles, key: EASY_KEY)
+            var key = ""
+            if difficulty == Difficulty.easy {
+                key = EASY_KEY
+                difficulty = Difficulty.medium
+            } else if difficulty == Difficulty.medium {
+                key = MEDIUM_KEY
+                difficulty = Difficulty.hard
+            } else if difficulty == Difficulty.hard {
+                key = HARD_KEY
+            }
+            ConnectionsShared.resetPuzzles(puzzles: currentPuzzles, key: key)
             updatePuzzles()
             loadNextPuzzle()
         }
@@ -303,23 +336,23 @@ extension GameBoardViewController {
         return Int.random(in: 0 ..< count)
     }
     
-    func determinePuzzleDifficulty() {
-        if difficulty == Difficulty.easy {
-            createEasyPuzzle()
-        } else if difficulty == Difficulty.medium {
-            createMediumPuzzle()
-        } else if difficulty == Difficulty.hard {
-            createHardPuzzle()
-        }
-    }
+//    func determinePuzzleDifficulty() {
+//        if difficulty == Difficulty.easy {
+//            createEasyPuzzle()
+//        } else if difficulty == Difficulty.medium {
+//            createMediumPuzzle()
+//        } else if difficulty == Difficulty.hard {
+//            createHardPuzzle()
+//        }
+//    }
     
     func updatePuzzles() {
         if difficulty == Difficulty.easy {
-            easyPuzzles = ConnectionsShared.retrievePuzzles(key: EASY_KEY)
+            currentPuzzles = ConnectionsShared.retrievePuzzles(key: EASY_KEY)
         } else if difficulty == Difficulty.medium {
-            mediumPuzzles = ConnectionsShared.retrievePuzzles(key: MEDIUM_KEY)
+            currentPuzzles = ConnectionsShared.retrievePuzzles(key: MEDIUM_KEY)
         } else if difficulty == Difficulty.hard {
-            hardPuzzles = ConnectionsShared.retrievePuzzles(key: HARD_KEY)
+            currentPuzzles = ConnectionsShared.retrievePuzzles(key: HARD_KEY)
         }
     }
     
@@ -330,7 +363,7 @@ extension GameBoardViewController {
         row5LettersShown = 0
         row6LettersShown = 0
         setPuzzleTime()
-        determinePuzzleDifficulty()
+        createPuzzle()
         correctWords = [0, Int(getRowCount()-1)]
         gameBoard.reloadData()
         startTimer()
@@ -403,13 +436,13 @@ extension GameBoardViewController {
         }
         if checkAllSolved() {
             timer.invalidate()
-            currentConnection.solved = true
             guessField.resignFirstResponder()
-            let customAlert = CustomAlertView()
-            let confirm = CustomAlertAction(title: "Next Puzzle") {
+            Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { (timer) in
+                self.score += 1
+                self.scoreLbl.text = "\(self.score!)"
+                self.currentConnection.solved = true
                 self.loadNextPuzzle()
             }
-            customAlert.showAlertView(superview: self.view, title: "Connections", text: CONGRATULATIONS, confirmAction: confirm)
         }
     }
     

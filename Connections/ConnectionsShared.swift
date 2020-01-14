@@ -15,6 +15,15 @@ enum Difficulty {
 
 class ConnectionsShared {
     
+    var shared: ConnectionsShared! = ConnectionsShared()
+    
+    var score: Int!
+    
+    class func updateHighScore(score: Int) {
+        UserDefaults.standard.set(score, forKey: HIGH_SCORE)
+        UserDefaults.standard.synchronize()
+    }
+    
     class func resetGame() {
         UserDefaults.standard.removeObject(forKey: INITIAL_LOAD)
         UserDefaults.standard.synchronize()
@@ -120,3 +129,4 @@ var EASY_KEY="easy"
 var MEDIUM_KEY="medium"
 var HARD_KEY="hard"
 var INITIAL_LOAD="initialLoadDone"
+var HIGH_SCORE="highScore"

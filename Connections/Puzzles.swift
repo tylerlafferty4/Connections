@@ -57,7 +57,7 @@ var EASY_PUZZLES: [Puzzle] = [
     Puzzle(word1: "smart", word2: "water", word3: "bottle", word4: "opener", solved: false),
     Puzzle(word1: "sesame", word2: "street", word3: "sign", word4: "language", solved: false),
     Puzzle(word1: "lady", word2: "bug", word3: "spray", word4: "tan", solved: false),
-    Puzzle(word1: "signature", word2: "dish", word3: "soap", word4: "suds", solved: false),
+    Puzzle(word1: "food", word2: "dish", word3: "soap", word4: "suds", solved: false),
     Puzzle(word1: "nile", word2: "river", word3: "bank", word4: "account", solved: false)
 ]
 

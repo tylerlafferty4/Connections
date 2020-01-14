@@ -12,10 +12,7 @@ import UIKit
 class HomeViewController : UIViewController {
     
     // -- Outlets --
-    @IBOutlet weak var easyBtn: UIButton!
-    @IBOutlet weak var normalBtn: UIButton!
-    @IBOutlet weak var mediumBtn: UIButton!
-    @IBOutlet weak var hardBtn: UIButton!
+    @IBOutlet weak var playBtn: UIButton!
     
     // -- Vars --
     var selectedDifficulty: Difficulty!
@@ -39,18 +36,8 @@ class HomeViewController : UIViewController {
             vc.difficulty = selectedDifficulty
         }
     }
-    @IBAction func easyTapped(_ sender: Any) {
+    @IBAction func playTapped(_ sender: Any) {
         selectedDifficulty = .easy
-        performSegue(withIdentifier: "showGameboard", sender: self)
-    }
-    
-    @IBAction func mediumTapped(_ sender: Any) {
-        selectedDifficulty = .medium
-        performSegue(withIdentifier: "showGameboard", sender: self)
-    }
-    
-    @IBAction func hardTapped(_ sender: Any) {
-        selectedDifficulty = .hard
         performSegue(withIdentifier: "showGameboard", sender: self)
     }
     
